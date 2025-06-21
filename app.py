@@ -62,38 +62,43 @@ def load_css():
     .stSlider > div > div > div > div { color: #2c3e50 !important; } /* Slider value */
     .stRadio > div > label > div { color: #2c3e50 !important; } /* Radio button labels */
     
-    /* NEW CSS FOR WHITE TEXT ON DARK BACKGROUND */
+    /* NEW CSS FOR WHITE TEXT ON DARK BACKGROUND - MOST AGGRESSIVE */
     /* This section forces text white for elements that sit on the global dark background or dark components */
     
-    /* General text color for input labels */
+    /* General text color for input labels (Sex, Eye Side) */
     .stTextInput label, .stSelectbox label, .stSlider label, .stRadio label, .stCheckbox label {
         color: white !important;
     }
 
-    /* Target the selected value within the st.selectbox input field more aggressively */
-    .stSelectbox > div > [data-baseweb="select"] > div:first-child > div:first-child > div:first-child,
-    .stSelectbox > div > [data-baseweb="select"] > div:first-child > div:first-child > div:first-child > div {
+    /* Target the selected value inside st.selectbox more broadly and deeply */
+    /* This aims to cover the input text of the selected value */
+    div[data-testid="stSelectbox"] .st-bh, /* Streamlit's internal BaseWeb div for input text */
+    div[data-testid="stSelectbox"] .st-ci, /* Another common Streamlit class for selected text */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div:first-child,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div:first-child > div,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div:first-child > div > span,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] input[type="text"] {
         color: white !important;
-    }
-    
-    /* Target specific Streamlit internal classes for text on dark backgrounds */
-    .st-b3, /* Text in selectbox when an option is chosen */
-    .st-b1, /* More general text like default labels */
-    .st-be, /* Placeholder/selected value text in inputs */
-    .st-bd, /* Options in dropdown */
-    .st-cg, /* Options in dropdown */
-    .st-br /* Selected value in selectbox */
-    {
-        color: white !important;
+        -webkit-text-fill-color: white !important; /* For Safari/WebKit browsers */
+        opacity: 1 !important; /* Ensure opacity is not hiding it */
     }
 
-    /* To make option text white in the dropdown list itself (when opened) */
-    div[role="listbox"] div span {
+    /* Target the options text in the dropdown list when it's open */
+    div[role="listbox"] div[data-baseweb="popover"] div[role="option"] div,
+    div[role="listbox"] div[role="option"] span {
         color: white !important;
     }
     
     /* Change color of numbers in slider (e.g., '50' for age) when not inside .info-card */
     .stSlider div > div > div > div > div[data-testid="stTickValue"] {
+        color: white !important;
+    }
+    
+    /* General app text and header color to white */
+    body, .stApp {
+        color: white; 
+    }
+    h1, h2, h3, h4, h5, h6 {
         color: white !important;
     }
     /* --- END NEW CSS FOR WHITE TEXT ON DARK BACKGROUND --- */
@@ -189,14 +194,6 @@ def load_css():
     .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
-    }
-
-    /* General app text and header color to white */
-    body, .stApp {
-        color: white; 
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: white !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -552,7 +549,7 @@ def main():
         
         # Recent activity or statistics (placeholder)
         st.markdown('<div class="info-card">', unsafe_allow_html=True)
-        st.markdown("### 📈 Today's Statistics")
+        st.markdown("### 📈 Today\'s Statistics")
         
         col_a, col_b = st.columns(2)
         with col_a:
@@ -573,4 +570,3 @@ st.markdown("""
 
 if __name__ == "__main__":
     main()
-
