@@ -59,9 +59,42 @@ def load_css():
         color: #2c3e50; /* Ensure all text within info-card is dark for contrast */
     }
     /* Specific Streamlit elements within info-card that might need color override */
-    .stSlider > div > div > div > div { color: #2c3e50; } /* Slider value */
-    .stSelectbox > div > div > div > div { color: #2c3e50; } /* Selectbox selected value */
-    .stRadio > div > label > div { color: #2c3e50; } /* Radio button labels */
+    /* Original dark text, ensure it remains dark or adjust as needed for info cards */
+    .stSlider > div > div > div > div { color: #2c3e50 !important; } /* Slider value */
+    .stSelectbox > div > div > div > div { color: #2c3e50 !important; } /* Selectbox selected value */
+    .stRadio > div > label > div { color: #2c3e50 !important; } /* Radio button labels */
+    
+    /* NEW CSS FOR WHITE TEXT ON DARK BACKGROUND */
+    /* General text color for input labels and selectbox values globally */
+    .stTextInput label, .stSelectbox label, .stSlider label, .stRadio label, .stCheckbox label,
+    .st-b3, /* Text in selectbox when an option is chosen */
+    .st-b1, /* More general text like default labels */
+    .st-be, /* Placeholder/selected value text in inputs */
+    .st-bd, /* Options in dropdown */
+    .st-cg, /* Options in dropdown */
+    .st-br /* Selected value in selectbox */
+    {
+        color: white !important;
+    }
+
+    /* To make option text white in the dropdown list itself (when opened) */
+    div[role="listbox"] div span {
+        color: white !important;
+    }
+
+    /* Ensure the selected option in the selectbox input field is white */
+    .st-ck { /* This targets the actual display area of the selected item in selectbox */
+        color: white !important;
+    }
+    .st-ch { /* This also affects the selected value in the display */
+        color: white !important;
+    }
+
+    /* Change color of numbers in slider (e.g., '50' for age) when not inside .info-card */
+    .stSlider div > div > div > div > div[data-testid="stTickValue"] {
+        color: white !important;
+    }
+    /* --- END NEW CSS FOR WHITE TEXT ON DARK BACKGROUND --- */
 
 
     .result-card {
@@ -116,7 +149,7 @@ def load_css():
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box_shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
     
     /* Sidebar styling */
@@ -154,6 +187,14 @@ def load_css():
     .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
+    }
+
+    /* General app text and header color to white */
+    body, .stApp {
+        color: white; 
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: white !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -276,7 +317,7 @@ def display_sidebar():
         
         🔹 **Normal** - Healthy eye condition  
         🔹 **Diabetic Retinopathy** - Diabetes-related eye damage  
-        🔹 **Glaucoma** - Optic nerve damage  
+        🔹 🔹 **Glaucoma** - Optic nerve damage  
         🔹 **Cataract** - Lens clouding  
         """)
         
@@ -351,10 +392,10 @@ diagnosis_mapping = {
 # If you had distinct short codes (e.g., 'C') that mapped to full names (e.g., 'Cataract'),
 # this dictionary would be manually defined here:
 # diagnosis_mapping = {
-#     'C': 'Cataract',
-#     'D': 'Diabetes',
-#     'G': 'Glaucoma',
-#     'N': 'Normal'
+#    'C': 'Cataract',
+#    'D': 'Diabetes',
+#    'G': 'Glaucoma',
+#    'N': 'Normal'
 # }
 # But given label_encoder.classes_ are the full names, this is simpler.
 
@@ -417,7 +458,7 @@ def main():
         # Prediction logic
         if predict_button:
             if uploaded_file is None:
-                st.warning("⚠️ Please upload an eye fundus image to get a prediction. 📸")
+                st.warning("⚠️ Please upload an eye fundus image to get a prediction. �")
             else:
                 # Progress bar
                 progress_bar = st.progress(0)
@@ -466,7 +507,7 @@ def main():
                     # Step 3: Making prediction
                     status_text.text("🤖 AI is analyzing the image...")
                     progress_bar.progress(75)
-                    time.sleep(1)  # Simulate processing time
+                    time.sleep(1) # Simulate processing time
                     
                     prediction_encoded = catboost_model.predict(input_df_reindexed).flatten()[0]
                     prediction_proba = catboost_model.predict_proba(input_df_reindexed).flatten()
@@ -520,3 +561,5 @@ st.markdown("""
 
 if __name__ == "__main__":
     main()
+
+�
